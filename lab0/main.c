@@ -5,14 +5,11 @@
 
 //maximal input number size
 #define MAX_IN_NUM_SIZE 14
-
 //maximal input number part size
 #define MAX_IN_NUM_PART_SIZE 13
-
 //maximal output number part size
 #define MAX_OUT_NUM_PART_SIZE 50
-
-//maximal fractional number part size (1 dot and 12 numerals)
+//maximal fractional number part size 
 #define MAX_FRACT_NUM_PART_SIZE 13
 
 
@@ -85,7 +82,6 @@ bool check_dots(char* number) {
 
     return (dots_count <= 1 && number[strlen(number) - 1] != '.' && number[0] != '.');
 }
-
 
 //check that all numeral in number < base
 bool check_base(char* number, int base) {
@@ -169,7 +165,6 @@ long double convert_to_fract_part(char* s_num, int base) {
     return num;
 }
 
-
 //convert integer number to string number in some base
 void convert_int_to_str(long int num, int base, char* s_num) {
 
@@ -210,11 +205,8 @@ void convert_fract_to_str(long double num, int base, char* s_num) {
 //struct that contain integer and fractional parts
 //of some number
 struct Number {
-    //num_integer - integer part of number
-    long int num_integer;
-
-    //num_fractional - fractional part of number
     long double num_fractional;
+    long int num_integer;
 };
 
 //convert number in some base, written in string
@@ -237,7 +229,6 @@ void print_number(struct Number* number, int base) {
 }
 
 int main() {
-
     //bases
     //in the notation of the problem condition
     //base_input - b1
@@ -247,52 +238,41 @@ int main() {
         printf("bad input");
         return 0;
     }
-
     //string with number
     char number[MAX_IN_NUM_SIZE];
     if (!scanf("%13s", number)) {
         printf("bad input");
         return 0;
     }
-
     //if number contains A,B,...,E,F
     //convert it to a,b,...,ef
     convert_to_lowercase(number);
-
     if (!check_symbols(number)) {
         printf("bad input");
         return 0;
     }
-
     //check that bases in [2;16]
     if (!is_between(2, 16, base_input) || !is_between(2, 16, base_output)) {
         printf("bad input");
         return 0;
     }
-
     //check that all digits smaller than base
     if (!check_base(number, base_input)) {
         printf("bad input");
         return 0;
     }
-
     //check that there is 1 or 0 dots
     //check that num don't starts or ends with dot
     if (!check_dots(number)) {
         printf("bad input");
         return 0;
     }
-
-
     //integer_part - string contains integer part of number
     //fractional_part - string contains fractional part of number
     char integer_part[MAX_IN_NUM_PART_SIZE], fractional_part[MAX_IN_NUM_PART_SIZE];
-
     separate_num(number, integer_part, fractional_part);
-
     //contains integer and fractional part
     struct Number num;
-
     create_number(&num, integer_part, fractional_part, base_input);
     print_number(&num, base_output);
 
