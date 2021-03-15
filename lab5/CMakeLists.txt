@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.5.1)
 project(lab5 C)
 
-set(CMAKE_C_STANDARD 99)
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address")
+set(SRC src/main.c src/Encode.c src/Encode.h src/Decode.c src/Decode.h src/FileStream.c src/FileStream.h src/BinaryTree.c src/BinaryTree.h src/NodesStack.c src/NodesStack.h)
 
-add_executable(lab5 main.c Encode.c Encode.h Decode.c Decode.h)
+add_executable(${PROJECT_NAME} ${SRC})
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../modules")
+include(common_lab)

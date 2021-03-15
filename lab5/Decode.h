@@ -1,11 +1,8 @@
 #ifndef LAB5_DECODE_H
 #define LAB5_DECODE_H
 
-#include "Encode.h"
-
-void ReadFirstFromFile(TFStream* fReader);
-
-unsigned char ReadSmallFromFile(TFStream* fReader, unsigned int codeLen);
+#include "FileStream.h"
+#include "BinaryTree.h"
 
 TBTree* BuildTreeByFile(TFStream* fReader);
 

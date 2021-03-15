@@ -1,31 +1,5 @@
 #include "Decode.h"
 
-void ReadFirstFromFile(TFStream* fReader) {
-    fReader->Symbol = getc(fReader->File);
-}
-
-unsigned char ReadSmallFromFile(TFStream* fReader, unsigned int codeLen) {
-    unsigned int readSize = fReader->UsedSize;
-    unsigned int restSize = 8u - readSize;
-    unsigned char code = 0;
-
-    if (codeLen <= restSize) {
-        code = (unsigned char)(fReader->Symbol << (restSize - codeLen)) >> (8u - codeLen);
-        readSize += codeLen;
-        assert(readSize <= 8u);
-        if (readSize == 8u) {
-            readSize = 0;
-            ReadFirstFromFile(fReader);
-        }
-        fReader->UsedSize = readSize;
-    }
-    else {
-        code += ReadSmallFromFile(fReader, restSize);
-        code += ReadSmallFromFile(fReader, codeLen - restSize) << restSize;
-    }
-    return code;
-}
-
 TBTree* BuildTreeByFileRec(TFStream* fReader) {
     unsigned char isTree = ReadSmallFromFile(fReader, 1);
     TBTree* root = NULL;

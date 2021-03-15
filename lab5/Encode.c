@@ -1,62 +1,5 @@
 #include "Encode.h"
 
-TBTree* CreateNode(TBTree* left, TBTree* right, int symbol, long int count) {
-    TBTree* node = malloc(sizeof(*node));
-    if (node == NULL) {
-        return NULL;
-    }
-    node->Left = left;
-    node->Right = right;
-    node->Symbol = symbol;
-    node->Count = count;
-    return node;
-}
-
-void Swap(TBTree** first, TBTree** second) {
-    TBTree* holder = *first;
-    *first = *second;
-    *second = holder;
-}
-
-void RemoveFromStack(TNStack* stack, int index) {
-    int stackLen = stack->len;
-    TBTree** nodesStack = stack->stack;
-    if (index < stackLen && index >= 0) {
-        Swap(&nodesStack[index], &nodesStack[stackLen - 1]);
-        stackLen--;
-        stack->len = stackLen;
-    }
-}
-
-void InsertInStack(TNStack* stack, TBTree* node) {
-    int len = stack->len;
-    if (len < stack->maxLen) {
-        TBTree** nodesStack = stack->stack;
-        nodesStack[len] = node;
-        stack->len = len + 1;
-    }
-}
-
-TBTree* PopMinIndex(TNStack* stack) {
-    TBTree** nodesStack = stack->stack;
-    int stackLen = stack->len;
-    if (stackLen == 0) {
-        return NULL;
-    }
-    int minIndex = 0;
-    long int minCount = nodesStack[0]->Count;
-    for (int i = 0; i < stackLen; ++i) {
-        long int nodeCount = nodesStack[i]->Count;
-        if (nodeCount < minCount) {
-            minCount = nodeCount;
-            minIndex = i;
-        }
-    }
-    TBTree* result = nodesStack[minIndex];
-    RemoveFromStack(stack, minIndex);
-    return result;
-}
-
 TBTree* BuildHaffmanTree(const int* count, int alphabetLen) {
     int different = 0;
     for (int i = 0; i < alphabetLen; ++i) {
@@ -96,58 +39,6 @@ TBTree* BuildHaffmanTree(const int* count, int alphabetLen) {
     TBTree* root = nodes[0];
     free(nodes);
     return root;
-}
-
-void DeleteTree(TBTree* root) {
-    if (root != NULL) {
-        DeleteTree(root->Left);
-        DeleteTree(root->Right);
-        free(root);
-    }
-}
-
-void WriteLastInFile(TFStream* fWriter) {
-    if (fWriter->UsedSize != 0) {
-        putc(fWriter->Symbol, fWriter->File);
-        fWriter->UsedSize = 0;
-    }
-}
-
-void WriteSmallInFile(TFStream* fWriter, unsigned char code, unsigned int codeLen) {
-    unsigned int writeSize = fWriter->UsedSize;
-    unsigned int restSize = 8u - writeSize;
-
-    if (codeLen <= restSize) {
-        fWriter->Symbol += code << writeSize;
-        writeSize += codeLen;
-        assert(writeSize <= 8u);
-        if (writeSize == 8u) {
-            writeSize = 0;
-            putc(fWriter->Symbol, fWriter->File);
-            fWriter->Symbol = 0;
-        }
-        fWriter->UsedSize = writeSize;
-    }
-    else {
-        unsigned char second = code >> restSize;
-        unsigned char first = code - (second << restSize);
-        WriteSmallInFile(fWriter, first, restSize);
-        WriteSmallInFile(fWriter, second, codeLen - restSize);
-    }
-}
-
-void WriteBigInFile(TFStream* fWriter, unsigned long int code, unsigned int codeLen) {
-    unsigned long int mask = 255;
-    unsigned int len = codeLen / 8u;
-    for (unsigned int i = 0; i < len; ++i) {
-        unsigned char symbol = (code & mask) >> (8u * i);
-        WriteSmallInFile(fWriter, symbol, 8u);
-        mask = mask << 8u;
-    }
-    if (codeLen % 8u != 0) {
-        unsigned char symbol = (code & mask) >> (8u * len);
-        WriteSmallInFile(fWriter, symbol, codeLen % 8u);
-    }
 }
 
 void SetCodes(TBTree* root, unsigned long int* codes, unsigned int* codeLens, unsigned long code, unsigned codeLen) {
