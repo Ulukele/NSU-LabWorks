@@ -4,6 +4,3 @@ project(lab5 C)
 set(SRC src/main.c src/Encode.c src/Encode.h src/Decode.c src/Decode.h src/FileStream.c src/FileStream.h src/BinaryTree.c src/BinaryTree.h src/NodesStack.c src/NodesStack.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../modules")
-include(common_lab)

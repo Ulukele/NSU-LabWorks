@@ -1,15 +1,7 @@
 import os
 
 # Consts
-BIG_FILE_LEN = 3000
-
-# Encode
-E_IN_FILENAME = "e_in.txt"
-E_OUT_FILENAME = "e_out.txt"
-
-# Decode
-D_IN_FILENAME = "d_in.txt"
-D_OUT_FILENAME = "d_out.txt"
+MAX_FILE_LEN = 30000
 
 # Colors consts
 class bcolors:
@@ -88,16 +80,25 @@ def analysis(first_filename, second_filename):
     second_file.close()
 
     first_file_size, second_file_size = print_size(first, second)
-    if first_file_size > BIG_FILE_LEN:
+    if first_file_size > MAX_FILE_LEN:
         print_message("FIRST FILE TOO BIG TO PRINT")
         first = b'TOO BIG'
-    if second_file_size > BIG_FILE_LEN:
+    if second_file_size > MAX_FILE_LEN:
         print_message("SECOND FILE TOO BIG TO PRINT")
         second = b'TOO BIG'
     if second_file_size > first_file_size:
         print_error("SECOND FILE BIGGER THAN FIRST")
 
     print_bytes_rows(first, second)
+
+def move_data(from_filename, to_filename):
+    print_action("MOVING DATA FROM {} TO {}".format(from_filename, to_filename))
+    from_file = open(from_filename, "rb")
+    from_data = from_file.read()
+    from_file.close()
+    to_file = open(to_filename, "wb")
+    to_file.write(from_data)
+    to_file.close()
 
 def prepare_data_to_encode(from_filename, to_filename):
     print_action("PREPARING DATA TO ENCODE. FROM {} TO {} WITH ADDING 'c\\r\\n'".format(from_filename, to_filename))
@@ -129,8 +130,8 @@ def prepare_data_to_decode(from_filename, to_filename):
     prepared_file.write(prepared_data)
     prepared_file.close()
 
-def execute_launch(in_filename, out_filename):
-    command = "cat {} | ./lab5 > {}".format(in_filename, out_filename)
+def execute_launch(mode, in_filename, out_filename):
+    command = "./lab5 {} {} {}".format(mode, in_filename, out_filename)
     # command = "./lab5"
     print_action("EXECUTING: {}".format(command))
     os.system(command)
@@ -139,35 +140,30 @@ def execute_launch(in_filename, out_filename):
 def check_full(in_filename, out_filename):
     print_action("CHECK ONE SAMPLE (ENCODE + DECODE). STATE=START, INPUT={}, OUTPUT={}".format(in_filename, out_filename))
 
-    prepare_data_to_encode(in_filename, in_filename)
+    # prepare_data_to_encode(in_filename, in_filename)
 
-    in_out_filename = "output_of_" + in_filename
-    out_in_filename = "input_for_" + out_filename
+    execute_launch('c', in_filename, out_filename)
+    analysis(in_filename, out_filename)
 
-    execute_launch(in_filename, in_out_filename)
-    analysis(in_filename, in_out_filename)
+    move_data(out_filename, in_filename)
+    # prepare_data_to_decode(out_filename, in_filename)
 
-    prepare_data_to_decode(in_out_filename, out_in_filename)
-
-    execute_launch(out_in_filename, out_filename)
-    analysis(out_in_filename, out_filename)
+    execute_launch('d', in_filename, out_filename)
+    analysis(in_filename, out_filename)
 
     print_action("CHECK ONE SAMPLE (ENCODE + DECODE). STATE=END")
 
-def check_one(in_filename, out_filename):
-    print_action("CHECK ONE SAMPLE (ENCODE OR DECODE). STATE=START, INPUT={}, OUTPUT={}".format(in_filename, out_filename))
+def check_one(in_filename, out_filename, mode='c'):
+    print_action("CHECK ONE SAMPLE (ENCODE OR DECODE). STATE=START, INPUT={}, OUTPUT={}, MODE={}".format(in_filename, out_filename, mode))
 
-    execute_launch(in_filename, out_filename)
+    execute_launch(mode, in_filename, out_filename)
     analysis(in_filename, out_filename)
-
     print_action("CHECK ONE SAMPLE (ENCODE OR DECODE). STATE=END")
 
 def just_check(first, second):
     print_action("JUST CHECK TWO FILES. STATE=START, FIRST={}, SECOND={}".format(first, second))
     analysis(first, second)
     print_action("JUST CHECK TWO FILES. STATE=END")
-
-print_action("CHECK ONE SAMPLE (ENCODE OR DECODE). STATE=END")
 
 def check_test(test_in_filename, test_out_filename):
     print_action("CHECK TEST. STATE=START, INPUT={}, OUTPUT={}".format(test_in_filename, test_out_filename))
@@ -176,7 +172,7 @@ def check_test(test_in_filename, test_out_filename):
     print_action("CHECK TEST. STATE=END")
 
 if __name__ == '__main__':
-    just_check("in.txt", "out.txt")
+    # just_check("in.jpg", "out.jpg")
     # check_one("in.txt", "out.txt")
-    # check_full("in_my.txt", "out.txt")
+    check_full("in.txt", "out.txt")
     # check_test("in.txt", "out.txt")
