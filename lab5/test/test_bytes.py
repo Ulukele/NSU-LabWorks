@@ -3,9 +3,13 @@ import os
 # Consts
 BIG_FILE_LEN = 3000
 
-# Filenames
-IN_FILENAME = "in.txt"
-OUT_FILENAME = "out.txt"
+# Encode
+E_IN_FILENAME = "e_in.txt"
+E_OUT_FILENAME = "e_out.txt"
+
+# Decode
+D_IN_FILENAME = "d_in.txt"
+D_OUT_FILENAME = "d_out.txt"
 
 # Colors consts
 class bcolors:
@@ -127,6 +131,7 @@ def prepare_data_to_decode(from_filename, to_filename):
 
 def execute_launch(in_filename, out_filename):
     command = "cat {} | ./lab5 > {}".format(in_filename, out_filename)
+    # command = "./lab5"
     print_action("EXECUTING: {}".format(command))
     os.system(command)
 
@@ -162,7 +167,7 @@ def just_check(first, second):
     analysis(first, second)
     print_action("JUST CHECK TWO FILES. STATE=END")
 
-    print_action("CHECK ONE SAMPLE (ENCODE OR DECODE). STATE=END")
+print_action("CHECK ONE SAMPLE (ENCODE OR DECODE). STATE=END")
 
 def check_test(test_in_filename, test_out_filename):
     print_action("CHECK TEST. STATE=START, INPUT={}, OUTPUT={}".format(test_in_filename, test_out_filename))
@@ -173,5 +178,5 @@ def check_test(test_in_filename, test_out_filename):
 if __name__ == '__main__':
     just_check("in.txt", "out.txt")
     # check_one("in.txt", "out.txt")
-    # check_full("in.txt", "out.txt")
+    # check_full("in_my.txt", "out.txt")
     # check_test("in.txt", "out.txt")

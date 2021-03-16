@@ -1,6 +1,6 @@
 #include "Decode.h"
 
-TBTree* BuildTreeByFileRec(TFStream* fReader) {
+static TBTree* BuildTreeByFileRec(TFStream* fReader) {
     unsigned char isTree = ReadSmallFromFile(fReader, 1);
     TBTree* root = NULL;
     if (isTree) {
@@ -28,10 +28,10 @@ TBTree* BuildTreeByFile(TFStream* fReader) {
     return root;
 }
 
-void DecodeFile(TFStream* fReader, FILE* out, TBTree* codesTree, unsigned int len, unsigned int lastLen) {
+void DecodeFile(TFStream* fReader, FILE* out, const TBTree* codesTree, unsigned int len, unsigned int lastLen) {
     unsigned int readBits = 0;
     unsigned int dataBits = len * 8u + lastLen;
-    TBTree* node = codesTree;
+    const TBTree* node = codesTree;
     while (readBits < dataBits) {
         unsigned char code = ReadSmallFromFile(fReader, 1);
         readBits++;

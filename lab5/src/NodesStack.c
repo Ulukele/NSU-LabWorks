@@ -1,4 +1,5 @@
 #include "NodesStack.h"
+#include <malloc.h>
 
 void RemoveFromStack(TNStack* stack, int index) {
     int stackLen = stack->len;

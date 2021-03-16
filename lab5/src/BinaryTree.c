@@ -1,12 +1,13 @@
 #include "BinaryTree.h"
+#include <malloc.h>
 
-TBTree* CreateNode(TBTree* left, TBTree* right, int symbol, long int count) {
+TBTree* CreateNode(const TBTree* left, const TBTree* right, int symbol, long int count) {
     TBTree* node = malloc(sizeof(*node));
     if (node == NULL) {
         return NULL;
     }
-    node->Left = left;
-    node->Right = right;
+    node->Left = (TBTree*)left;
+    node->Right = (TBTree*)right;
     node->Symbol = symbol;
     node->Count = count;
     return node;

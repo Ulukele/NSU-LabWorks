@@ -1,4 +1,5 @@
 #include "FileStream.h"
+#include <assert.h>
 
 void WriteLastInFile(TFStream* fWriter) {
     if (fWriter->UsedSize != 0) {

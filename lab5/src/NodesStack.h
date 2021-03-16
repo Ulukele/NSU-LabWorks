@@ -1,6 +1,4 @@
-#ifndef LAB5_NODESSTACK_H
-#define LAB5_NODESSTACK_H
-
+#pragma once
 #include "BinaryTree.h"
 
 typedef struct TNstack {
@@ -14,5 +12,3 @@ void RemoveFromStack(TNStack* stack, int index);
 void InsertInStack(TNStack* stack, TBTree* node);
 
 TBTree* PopMinIndex(TNStack* stack);
-
-#endif //LAB5_NODESSTACK_H

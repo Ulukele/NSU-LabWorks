@@ -34,7 +34,7 @@ int main() {
             }
         }
 
-        TBTree* root = BuildHaffmanTree(count, ALPHABET_LEN);
+        TBTree* root = BuildHuffmanTree(count, ALPHABET_LEN);
 
         unsigned long int codes[ALPHABET_LEN] = {0};
         unsigned int codeLens[ALPHABET_LEN] = {0};
@@ -45,8 +45,8 @@ int main() {
         SkipChars(in, 3);
 
         TFStream fWriter = {out, 0, 0};
-        PrintCompressedTree(&fWriter, root);
-        PrintEncodedLen(&fWriter, count, ALPHABET_LEN, codeLens);
+        PrintCompressedTree(root, &fWriter);
+        PrintEncodedLen(&fWriter, count, codeLens, ALPHABET_LEN);
         EncodeFile(in, &fWriter, codes, codeLens);
         WriteLastInFile(&fWriter);
 

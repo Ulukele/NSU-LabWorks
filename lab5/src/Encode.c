@@ -1,6 +1,7 @@
 #include "Encode.h"
+#include <malloc.h>
 
-TBTree* BuildHaffmanTree(const int* count, int alphabetLen) {
+TBTree* BuildHuffmanTree(const int* count, int alphabetLen) {
     int different = 0;
     for (int i = 0; i < alphabetLen; ++i) {
         if (count[i] != 0) {
@@ -41,7 +42,7 @@ TBTree* BuildHaffmanTree(const int* count, int alphabetLen) {
     return root;
 }
 
-void SetCodes(TBTree* root, unsigned long int* codes, unsigned int* codeLens, unsigned long code, unsigned codeLen) {
+void SetCodes(const TBTree* root, unsigned long* codes, unsigned* codeLens, unsigned long code, unsigned codeLen) {
     if (root == NULL) {
         return;
     }
@@ -56,7 +57,7 @@ void SetCodes(TBTree* root, unsigned long int* codes, unsigned int* codeLens, un
     }
 }
 
-void PrintCompressedTreeRec(TBTree* root, TFStream* fWriter) {
+static void PrintCompressedTreeRec(const TBTree* root, TFStream* fWriter) {
     if (!root) {
         WriteSmallInFile(fWriter, 0, 1u);
         WriteSmallInFile(fWriter, 0, 8u);
@@ -73,7 +74,7 @@ void PrintCompressedTreeRec(TBTree* root, TFStream* fWriter) {
     }
 }
 
-void PrintCompressedTree(TFStream* fWriter, TBTree* root) {
+void PrintCompressedTree(const TBTree* root, TFStream* fWriter) {
     if (!root->Left) {
         WriteSmallInFile(fWriter, 0, 1u);
         WriteSmallInFile(fWriter, 0, 8u);
@@ -88,7 +89,7 @@ void PrintCompressedTree(TFStream* fWriter, TBTree* root) {
     }
 }
 
-void PrintEncodedLen(TFStream* fWriter, int const* count, int alphabetLen, unsigned const* codeLens) {
+void PrintEncodedLen(TFStream* fWriter, const int* count, const unsigned* codeLens, int alphabetLen) {
     unsigned int compressedLen = 0;
     for (int i = 0; i < alphabetLen; ++i) {
         compressedLen += count[i] * codeLens[i];
@@ -99,7 +100,7 @@ void PrintEncodedLen(TFStream* fWriter, int const* count, int alphabetLen, unsig
     }
 }
 
-void EncodeFile(FILE* in, TFStream* fWriter, unsigned long const* codes, unsigned const* codeLens) {
+void EncodeFile(FILE* in, TFStream* fWriter, const unsigned long* codes, const unsigned* codeLens) {
     int symbol = 0;
     while (symbol != EOF) {
         symbol = getc(in);

@@ -1,8 +1,5 @@
-#ifndef LAB5_FILESTREAM_H
-#define LAB5_FILESTREAM_H
-
+#pragma once
 #include <stdio.h>
-#include <assert.h>
 
 typedef struct {
     FILE* File;
@@ -19,5 +16,3 @@ void WriteBigInFile(TFStream* fWriter, unsigned long int code, unsigned int code
 void ReadFirstFromFile(TFStream* fReader);
 
 unsigned char ReadSmallFromFile(TFStream* fReader, unsigned int codeLen);
-
-#endif //LAB5_FILESTREAM_H

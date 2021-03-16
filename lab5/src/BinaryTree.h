@@ -1,7 +1,4 @@
-#ifndef LAB5_BINARYTREE_H
-#define LAB5_BINARYTREE_H
-
-#include <malloc.h>
+#pragma once
 
 typedef struct TBTree {
     struct TBTree* Left;
@@ -10,10 +7,8 @@ typedef struct TBTree {
     long int Count;
 } TBTree;
 
-TBTree* CreateNode(TBTree* left, TBTree* right, int symbol, long int count);
+TBTree* CreateNode(const TBTree* left, const TBTree* right, int symbol, long int count);
 
 void Swap(TBTree** first, TBTree** second);
 
 void DeleteTree(TBTree* root);
-
-#endif //LAB5_BINARYTREE_H
