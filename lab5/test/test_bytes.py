@@ -171,8 +171,10 @@ def check_test(test_in_filename, test_out_filename):
 
     print_action("CHECK TEST. STATE=END")
 
+# TODO: adapt for standart usage of lab5 (without parameters)
+
 if __name__ == '__main__':
-    # just_check("in.jpg", "out.jpg")
+    # just_check("in.txt", "out.txt")
     # check_one("in.txt", "out.txt")
     check_full("in.txt", "out.txt")
     # check_test("in.txt", "out.txt")

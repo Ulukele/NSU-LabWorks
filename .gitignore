@@ -1,3 +1,7 @@
-
-*/CMakeFiles*
+*CMake*
+!*CMakeLists.txt
+*cmake*
+*Makefile
 */Testing*
+*/test/lab*
+*/test/*.txt

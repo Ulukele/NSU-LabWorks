@@ -5,7 +5,7 @@
 #include "Decode.h"
 
 #define INPUT "in.txt"
-#define OUTPUT "out.jpg"
+#define OUTPUT "out.txt"
 
 #define ALPHABET_LEN 256
 
