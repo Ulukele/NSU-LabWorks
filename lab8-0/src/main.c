@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <stdbool.h>
 
 typedef struct {
     int Begin;
@@ -97,8 +98,22 @@ TEdge* FindSpanningTree(TGraph* graph) {
             spanningTreeLen++;
         }
     }
+
+    bool haveSpanningTree = true;
+    for (int i = 0; i < verticesCount - 1; ++i) {
+        if (FindSet(dsu, i) != FindSet(dsu, i + 1)) {
+            haveSpanningTree = false;
+            break;
+        }
+    }
     DeleteSets(dsu);
-    return spanningTree;
+    if (haveSpanningTree) {
+        return spanningTree;
+    }
+    else {
+        free(spanningTree);
+        return NULL;
+    }
 }
 
 int main() {
@@ -149,6 +164,7 @@ int main() {
     TEdge* spanningTree = FindSpanningTree(&graph);
     if (spanningTree == NULL) {
         free(edges);
+        printf("no spanning tree\n");
         return 0;
     }
 
