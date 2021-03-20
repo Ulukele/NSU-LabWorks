@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 typedef struct {
-    int Begin;
-    int End;
+    short int Begin;
+    short int End;
     int Weight;
 } TEdge;
 
@@ -17,8 +17,8 @@ typedef struct {
 } TGraph;
 
 typedef struct {
-    int* Parent;
-    int* Rank;
+    short int* Parent;
+    short int* Rank;
 } TDSU;
 
 void DeleteSets(TDSU* dsu) {
@@ -90,8 +90,8 @@ TEdge* FindSpanningTree(TGraph* graph) {
     SortEdges(edges, edgesCount);
     TDSU* dsu = MakeSets(verticesCount);
     for (int i = 0; i < edgesCount; ++i) {
-        int from = edges[i].Begin;
-        int to = edges[i].End;
+        short int from = edges[i].Begin;
+        short int to = edges[i].End;
         if (FindSet(dsu, from) != FindSet(dsu, to)) {
             MergeSets(dsu, from, to);
             spanningTree[spanningTreeLen] = edges[i];
@@ -136,17 +136,23 @@ int main() {
     }
 
     int edgesCount = 0;
-    TEdge* edges = calloc(m, sizeof(*edges));
+    TEdge* edges = malloc(sizeof(*edges) * m);
     assert(edges);
     for (int i = 0; i < m; ++i) {
-        int from, to, weight;
-        if (scanf("%d %d %d", &from, &to, &weight) != 3) {
+        short int from, to;
+        int weight;
+        if (scanf("%hd %hd %d", &from, &to, &weight) != 3) {
             printf("bad number of lines\n");
             free(edges);
             return 0;
         }
+        if (to > n || from > n || to <= 0 || from <= 0) {
+            printf("bad vertex\n");
+            free(edges);
+            return 0;
+        }
         if (weight < 0) {
-            printf("bad number of lines\n");
+            printf("bad length\n");
             free(edges);
             return 0;
         }
