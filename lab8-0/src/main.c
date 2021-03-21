@@ -81,7 +81,7 @@ void SortEdges(TEdge* edges, int edgesCount) {
     qsort(edges, edgesCount, sizeof(TEdge), (int(*) (const void*, const void*))CompareEdges);
 }
 
-char* FindSpanningTree(TGraph* graph) {
+TEdgeLight* FindSpanningTree(TGraph* graph) {
     TEdge* edges = graph->Edges;
     int edgesCount = graph->EdgesCount;
     int verticesCount = graph->VerticesCount;
