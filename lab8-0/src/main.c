@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdbool.h>
@@ -85,11 +84,14 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
     TEdge* edges = graph->Edges;
     int edgesCount = graph->EdgesCount;
     int verticesCount = graph->VerticesCount;
+    if (verticesCount == 0) {
+        return NULL;
+    }
 
-    TEdgeLight* spanningTree = calloc(verticesCount - 1, sizeof(*spanningTree));
     int spanningTreeLen = 0;
+    TEdgeLight* spanningTree = malloc((verticesCount - 1) * sizeof(*spanningTree));
     if (spanningTree == NULL) {
-        return spanningTree;
+        return NULL;
     }
 
     SortEdges(edges, edgesCount);
@@ -143,7 +145,9 @@ int main() {
 
     int edgesCount = 0;
     TEdge* edges = malloc(sizeof(*edges) * m);
-    assert(edges);
+    if (edges == NULL && m != 0) {
+        return 0;
+    }
     for (int i = 0; i < m; ++i) {
         short int from, to;
         int weight;
