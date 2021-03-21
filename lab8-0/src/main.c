@@ -11,6 +11,11 @@ typedef struct {
 } TEdge;
 
 typedef struct {
+    short int Begin;
+    short int End;
+} TEdgeLight;
+
+typedef struct {
     TEdge* Edges;
     int VerticesCount;
     int EdgesCount;
@@ -76,12 +81,12 @@ void SortEdges(TEdge* edges, int edgesCount) {
     qsort(edges, edgesCount, sizeof(TEdge), (int(*) (const void*, const void*))CompareEdges);
 }
 
-TEdge* FindSpanningTree(TGraph* graph) {
+char* FindSpanningTree(TGraph* graph) {
     TEdge* edges = graph->Edges;
     int edgesCount = graph->EdgesCount;
     int verticesCount = graph->VerticesCount;
 
-    TEdge* spanningTree = calloc(verticesCount - 1, sizeof(*spanningTree));
+    TEdgeLight* spanningTree = calloc(verticesCount - 1, sizeof(*spanningTree));
     int spanningTreeLen = 0;
     if (spanningTree == NULL) {
         return spanningTree;
@@ -94,7 +99,8 @@ TEdge* FindSpanningTree(TGraph* graph) {
         short int to = edges[i].End;
         if (FindSet(dsu, from) != FindSet(dsu, to)) {
             MergeSets(dsu, from, to);
-            spanningTree[spanningTreeLen] = edges[i];
+            spanningTree[spanningTreeLen].Begin = edges[i].Begin;
+            spanningTree[spanningTreeLen].End = edges[i].End;
             spanningTreeLen++;
         }
     }
@@ -167,7 +173,7 @@ int main() {
     graph.VerticesCount = n;
     graph.EdgesCount = m;
     
-    TEdge* spanningTree = FindSpanningTree(&graph);
+    TEdgeLight* spanningTree = FindSpanningTree(&graph);
     if (spanningTree == NULL) {
         free(edges);
         printf("no spanning tree\n");
