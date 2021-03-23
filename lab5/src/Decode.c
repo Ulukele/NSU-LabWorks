@@ -28,11 +28,10 @@ TBTree* BuildTreeByFile(TFStream* fReader) {
     return root;
 }
 
-void DecodeFile(TFStream* fReader, FILE* out, const TBTree* codesTree, unsigned int len, unsigned int lastLen) {
+void DecodeFile(TFStream* fReader, FILE* out, const TBTree* codesTree, unsigned int bitsCount) {
     unsigned int readBits = 0;
-    unsigned int dataBits = len * 8u + lastLen;
     const TBTree* node = codesTree;
-    while (readBits < dataBits) {
+    while (readBits < bitsCount) {
         unsigned char code = ReadSmallFromFile(fReader, 1);
         readBits++;
         if (code) {

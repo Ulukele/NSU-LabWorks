@@ -5,4 +5,4 @@
 
 TBTree* BuildTreeByFile(TFStream* fReader);
 
-void DecodeFile(TFStream* fReader, FILE* out, const TBTree* codesTree, unsigned int len, unsigned int lastLen);
+void DecodeFile(TFStream* fReader, FILE* out, const TBTree* codesTree, unsigned int bitsCount);

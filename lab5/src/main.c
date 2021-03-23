@@ -101,10 +101,8 @@ int main(int argc, char** argv) {
             dataBits += ReadSmallFromFile(&fReader, 8u) * deg;
             deg *= 256;
         }
-        unsigned int dataLen = dataBits / 8u;
-        unsigned int dataLastLen = dataBits % 8u;
 
-        DecodeFile(&fReader, out, codesTree, dataLen, dataLastLen);
+        DecodeFile(&fReader, out, codesTree, dataBits);
         DeleteTree(codesTree);
     }
     fclose(in);
