@@ -1,6 +1,28 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <stdbool.h>
 #include "Graph.h"
+#include "PriorityQueue.h"
+
+TEdgeLight* FindSpanningTree(TGraph* graph) {
+    int verticesCount = graph->VerticesCount;
+    short** neighbours = graph->Neighbours;
+    short* neighboursCount = graph->NeighboursCount;
+
+    if (verticesCount == 0) {
+        return NULL;
+    }
+    TEdgeLight* spanningTree = malloc((verticesCount - 1) * sizeof(*spanningTree));
+    if (spanningTree == NULL) {
+        return NULL;
+    }
+    TPQueue* pQueue = CreateEmptyPQueue(verticesCount);
+    for (int i = 0; i < neighboursCount[0]; ++i) {
+        // Enqueue(pQueue, (TPair){.Key=, .Value=}); TODO
+    }
+
+    return NULL;
+}
 
 int main() {
     int n, m;
@@ -55,6 +77,8 @@ int main() {
     graph.Neighbours = neighbours;
     graph.NeighboursCount = neighboursCount;
     graph.VerticesCount = n;
+
+    // TODO: store graph
     
     for (int i = 0; i < n; ++i) {
         free(neighbours[i]);
@@ -64,3 +88,5 @@ int main() {
     
     return 0;
 }
+
+// TODO: how to store weights

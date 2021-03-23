@@ -5,3 +5,8 @@ typedef struct {
     short* NeighboursCount;
     int VerticesCount;
 } TGraph;
+
+typedef struct {
+    short int Begin;
+    short int End;
+} TEdgeLight;
