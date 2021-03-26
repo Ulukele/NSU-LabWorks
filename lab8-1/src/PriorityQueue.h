@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+#define PQUEUE_INF_KEY -1
 
 // Priority queue based on Binary heap
 
@@ -17,3 +18,7 @@ typedef struct {
 TPQueue* CreateEmptyPQueue(int maxLen);
 
 bool Enqueue(TPQueue* pQueue, TPair value);
+
+int Dequeue(TPQueue* pQueue);
+
+bool IsEmpty(TPQueue* pQueue);

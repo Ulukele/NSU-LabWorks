@@ -1,8 +1,16 @@
 #include <stdio.h>
+#include <assert.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include "Graph.h"
 #include "PriorityQueue.h"
+
+void SkipNum(FILE* file, int count) {
+    int skip;
+    for (int i = 0; i < count; ++i) {
+        fscanf(file, "%d", &skip);
+    }
+}
 
 TEdgeLight* FindSpanningTree(TGraph* graph) {
     int verticesCount = graph->VerticesCount;
@@ -16,9 +24,15 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
     if (spanningTree == NULL) {
         return NULL;
     }
+    short* parent = malloc(verticesCount * sizeof(*parent));
     TPQueue* pQueue = CreateEmptyPQueue(verticesCount);
-    for (int i = 0; i < neighboursCount[0]; ++i) {
-        // Enqueue(pQueue, (TPair){.Key=, .Value=}); TODO
+    Enqueue(pQueue, (TPair){.Key=0, .Value=0});
+    for (int i = 1; i < neighboursCount[0]; ++i) {
+        Enqueue(pQueue, (TPair){.Key=PQUEUE_INF_KEY, .Value=i});
+    }
+
+    while (!IsEmpty(pQueue)) {
+        int vertex = Dequeue(pQueue);
     }
 
     return NULL;
@@ -43,27 +57,28 @@ int main() {
         return 0;
     }
 
-    short** neighbours = malloc(sizeof(short*) * n);
-    short* neighboursCount = calloc(n, sizeof(*neighboursCount));
+    TGraph* graph = CreateEmptyGraph(n);
+    assert(graph);
+    short** neighbours = graph->Neighbours;
+    int** weights = graph->Weights;
+    short* neighboursCount = graph->NeighboursCount;
+
     for (int i = 0; i < m; ++i) {
         short int from, to;
         int weight;
         if (scanf("%hd %hd %d", &from, &to, &weight) != 3) {
             printf("bad number of lines\n");
-            free(neighboursCount);
-            free(neighbours);
+            DeleteGraph(graph);
             return 0;
         }
         if (to > n || from > n || to <= 0 || from <= 0) {
             printf("bad vertex\n");
-            free(neighboursCount);
-            free(neighbours);
+            DeleteGraph(graph);
             return 0;
         }
         if (weight < 0) {
             printf("bad length\n");
-            free(neighboursCount);
-            free(neighbours);
+            DeleteGraph(graph);
             return 0;
         }
         neighboursCount[from - 1]++;
@@ -71,22 +86,38 @@ int main() {
     }
     for (int i = 0; i < n; ++i) {
         neighbours[i] = malloc(sizeof(short) * neighboursCount[i]);
+        weights[i] = malloc(sizeof(int) * neighboursCount[i]);
     }
 
-    TGraph graph;
-    graph.Neighbours = neighbours;
-    graph.NeighboursCount = neighboursCount;
-    graph.VerticesCount = n;
-
-    // TODO: store graph
-    
-    for (int i = 0; i < n; ++i) {
-        free(neighbours[i]);
+    FILE* in = fopen("in.txt", "r");
+    SkipNum(in, 2);
+    short* neighboursCountCopy = calloc(n, sizeof(*neighboursCountCopy));
+    if (neighboursCountCopy == NULL) {
+        DeleteGraph(graph);
+        return 0;
     }
-    free(neighbours);
-    free(neighboursCount);
+    for (int i = 0; i < m; ++i) {
+        short int from, to;
+        int weight;
+        if (fscanf(in, "%hd %hd %d", &from, &to, &weight) != 3) {
+            printf("bad number of lines\n");
+            DeleteGraph(graph);
+            return 0;
+        }
+        from--;
+        to--;
+        int fromIdx = neighboursCountCopy[from];
+        int toIdx = neighboursCountCopy[to];
+        neighbours[from][fromIdx] = to;
+        neighbours[to][toIdx] = from;
+        weights[from][fromIdx] = weight;
+        weights[to][toIdx] = weight;
+        neighboursCountCopy[from]++;
+        neighboursCountCopy[to]++;
+    }
+    free(neighboursCountCopy);
+
+    DeleteGraph(graph);
     
     return 0;
 }
-
-// TODO: how to store weights
