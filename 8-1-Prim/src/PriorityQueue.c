@@ -31,7 +31,7 @@ static void ShiftDown(TPQueue* pQueue, int idx) {
     int maxLen = pQueue->MaxLen;
     TPair* binaryHeap = pQueue->BinaryHeap;
 
-    while (3 * idx + 1 < len) {
+    while (2 * idx + 1 < len) {
         int left = 2 * idx + 1;
         int right = 2 * idx + 2;
         int minimum = left;
@@ -90,4 +90,8 @@ int Dequeue(TPQueue* pQueue) {
 
 bool IsEmpty(TPQueue* pQueue) {
     return (pQueue->Len == 0);
+}
+
+TPair* FindByValue() {
+    
 }

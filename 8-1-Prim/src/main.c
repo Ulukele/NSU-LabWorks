@@ -32,7 +32,7 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
     }
 
     while (!IsEmpty(pQueue)) {
-        int vertex = Dequeue(pQueue);
+        int v = Dequeue(pQueue);
     }
 
     return NULL;
