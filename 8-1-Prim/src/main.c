@@ -20,19 +20,37 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
     if (verticesCount == 0) {
         return NULL;
     }
+
     TEdgeLight* spanningTree = malloc((verticesCount - 1) * sizeof(*spanningTree));
-    if (spanningTree == NULL) {
+    int spanningTreeLen = 0;
+    short* parent = malloc(verticesCount * sizeof(*parent));
+    int* keys= malloc(verticesCount * sizeof(*keys));
+    TPQueue* pQueue = CreateEmptyPQueue(verticesCount, keys);
+
+    if (!spanningTree || !parent || !keys || !pQueue) {
+        free(spanningTree);
+        free(parent);
+        free(keys);
+        DeletePQueue(pQueue);
         return NULL;
     }
-    short* parent = malloc(verticesCount * sizeof(*parent));
-    TPQueue* pQueue = CreateEmptyPQueue(verticesCount);
-    Enqueue(pQueue, (TPair){.Key=0, .Value=0});
-    for (int i = 1; i < neighboursCount[0]; ++i) {
-        Enqueue(pQueue, (TPair){.Key=PQUEUE_INF_KEY, .Value=i});
+
+    for (int i = 0; i < verticesCount; ++i) {
+        parent[i] = -1;
+        keys[i] = PQUEUE_INF_KEY;
+        Enqueue(pQueue, i);
+    }
+    for (int i = 0; i < neighboursCount[0]; ++i) {
+        int u = neighbours[0][i];
+        keys[u] = weights[0][i];
     }
 
     while (!IsEmpty(pQueue)) {
         int v = Dequeue(pQueue);
+        for (int i = 0; i < neighboursCount[v]; ++i) {
+            int u = neighbours[v][i];
+            // TODO Decrease key
+        }
     }
 
     return NULL;

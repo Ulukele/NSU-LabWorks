@@ -5,19 +5,17 @@
 // Priority queue based on Binary heap
 
 typedef struct {
-    int Key;
-    int Value;
-} TPair;
-
-typedef struct {
-    TPair* BinaryHeap;
+    short* BinaryHeap;
+    int* Keys;
     int MaxLen;
     int Len;
 } TPQueue;
 
-TPQueue* CreateEmptyPQueue(int maxLen);
+TPQueue* CreateEmptyPQueue(int maxLen, int* keys);
 
-bool Enqueue(TPQueue* pQueue, TPair value);
+void DeletePQueue(TPQueue* pQueue);
+
+bool Enqueue(TPQueue* pQueue, int value);
 
 int Dequeue(TPQueue* pQueue);
 
