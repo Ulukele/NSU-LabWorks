@@ -15,7 +15,7 @@ TPQueue* CreateEmptyPQueue(int maxLen, int* keys);
 
 void DeletePQueue(TPQueue* pQueue);
 
-bool Enqueue(TPQueue* pQueue, int value);
+bool Enqueue(TPQueue* pQueue, short value);
 
 int Dequeue(TPQueue* pQueue);
 

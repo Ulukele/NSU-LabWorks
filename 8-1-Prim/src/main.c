@@ -15,6 +15,7 @@ void SkipNum(FILE* file, int count) {
 TEdgeLight* FindSpanningTree(TGraph* graph) {
     int verticesCount = graph->VerticesCount;
     short** neighbours = graph->Neighbours;
+    int** weights = graph->Weights;
     short* neighboursCount = graph->NeighboursCount;
 
     if (verticesCount == 0) {
@@ -38,11 +39,14 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
     for (int i = 0; i < verticesCount; ++i) {
         parent[i] = -1;
         keys[i] = PQUEUE_INF_KEY;
-        Enqueue(pQueue, i);
     }
+    keys[0] = 0;
     for (int i = 0; i < neighboursCount[0]; ++i) {
         int u = neighbours[0][i];
         keys[u] = weights[0][i];
+    }
+    for (int i = 0; i < verticesCount; ++i) {
+        Enqueue(pQueue, i);
     }
 
     while (!IsEmpty(pQueue)) {
@@ -50,6 +54,7 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
         for (int i = 0; i < neighboursCount[v]; ++i) {
             int u = neighbours[v][i];
             // TODO Decrease key
+            // Rewrite Priority Queue, Idk how to update keys fast...
         }
     }
 

@@ -43,10 +43,10 @@ static void ShiftDown(TPQueue* pQueue, int idx) {
         int left = 2 * idx + 1;
         int right = 2 * idx + 2;
         int minimum = left;
-        if (right < len && CompareKeys(&binaryHeap[left], &binaryHeap[right], pQueue->keys)) {
+        if (right < len && CompareKeys(&binaryHeap[left], &binaryHeap[right], pQueue->Keys)) {
             minimum = right;
         }
-        if (!CompareKeys(&binaryHeap[idx], &binaryHeap[minimum], pQueue->keys)) {
+        if (!CompareKeys(&binaryHeap[idx], &binaryHeap[minimum], pQueue->Keys)) {
             break;
         }
         Swap(&binaryHeap[idx], &binaryHeap[minimum]);
@@ -60,7 +60,7 @@ static void ShiftUp(TPQueue* pQueue, int idx) {
     short* binaryHeap = pQueue->BinaryHeap;
 
     int parent = (idx - 1) / 2;
-    while (CompareKeys(&binaryHeap[parent], &binaryHeap[idx], pQueue->keys)) {
+    while (CompareKeys(&binaryHeap[parent], &binaryHeap[idx], pQueue->Keys)) {
         Swap(&binaryHeap[idx], &binaryHeap[parent]);
         idx = parent;
         parent = (idx - 1) / 2;
@@ -76,7 +76,7 @@ bool Enqueue(TPQueue* pQueue, short value) {
         int idx = len;
         len++;
         binaryHeap[idx] = value;
-        if (CompareKeys(&binaryHeap[idx], &binaryHeap[(idx - 1) / 2], pQueue->keys)) {
+        if (CompareKeys(&binaryHeap[idx], &binaryHeap[(idx - 1) / 2], pQueue->Keys)) {
             ShiftUp(pQueue, idx);
         }
         return true;
