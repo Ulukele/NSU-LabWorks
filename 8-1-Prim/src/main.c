@@ -24,41 +24,63 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
 
     TEdgeLight* spanningTree = malloc((verticesCount - 1) * sizeof(*spanningTree));
     int spanningTreeLen = 0;
-    short* parent = malloc(verticesCount * sizeof(*parent));
-    int* keys= malloc(verticesCount * sizeof(*keys));
-    TPQueue* pQueue = CreateEmptyPQueue(verticesCount, keys);
+    short* parents = malloc(verticesCount * sizeof(*parents));
+    int* keys = malloc(verticesCount * sizeof(*keys));
+    short* order = malloc(verticesCount * sizeof(*order));
+    TPQueue* pQueue = CreateEmptyPQueue(verticesCount, keys, order);
 
-    if (!spanningTree || !parent || !keys || !pQueue) {
+    if (!spanningTree || !parents || !keys || !order || !pQueue) {
         free(spanningTree);
-        free(parent);
+        free(parents);
         free(keys);
+        free(order);
         DeletePQueue(pQueue);
         return NULL;
     }
 
     for (int i = 0; i < verticesCount; ++i) {
-        parent[i] = -1;
+        parents[i] = -1;
         keys[i] = PQUEUE_INF_KEY;
+        order[i] = -1;
     }
     keys[0] = 0;
     for (int i = 0; i < neighboursCount[0]; ++i) {
         int u = neighbours[0][i];
         keys[u] = weights[0][i];
+        parents[u] = 0;
+        Enqueue(pQueue, u);
     }
-    for (int i = 0; i < verticesCount; ++i) {
-        Enqueue(pQueue, i);
-    }
+    Enqueue(pQueue, 0);
 
     while (!IsEmpty(pQueue)) {
         int v = Dequeue(pQueue);
+        int parent = parents[v];
         for (int i = 0; i < neighboursCount[v]; ++i) {
             int u = neighbours[v][i];
-            // TODO Decrease key
-            // Rewrite Priority Queue, Idk how to update keys fast...
+            if (order[u] == -1) {
+                keys[u] = weights[v][i];
+                parents[u] = v;
+                Enqueue(pQueue, u);
+            } else if (weights[v][i] < keys[u]) {
+                parents[u] = v;
+                DecreaseKey(pQueue, u, weights[v][i]);
+            }
+        }
+        if (parent != -1) {
+            spanningTree[spanningTreeLen].Begin = v;
+            spanningTree[spanningTreeLen].End = parent;
+            spanningTreeLen++;
         }
     }
-
-    return NULL;
+    free(parents);
+    free(keys);
+    free(order);
+    DeletePQueue(pQueue);
+    if (spanningTreeLen != verticesCount - 1) {
+        free(spanningTree);
+        return NULL;
+    }
+    return spanningTree;
 }
 
 int main() {
@@ -139,6 +161,16 @@ int main() {
         neighboursCountCopy[to]++;
     }
     free(neighboursCountCopy);
+
+    TEdgeLight* spanningTree = FindSpanningTree(graph);
+    if (spanningTree == NULL) {
+        printf("no spanning tree\n");
+    }
+    else {
+        for (int i = 0; i < n - 1; ++i) {
+            printf("%d %d\n", spanningTree[i].Begin + 1, spanningTree[i].End + 1);
+        }
+    }
 
     DeleteGraph(graph);
     
