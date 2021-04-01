@@ -47,7 +47,6 @@ void DeletePQueue(TPQueue* pQueue) {
 
 static void ShiftDown(TPQueue* pQueue, int idx) {
     int len = pQueue->Len;
-    int maxLen = pQueue->MaxLen;
     short* binaryHeap = pQueue->BinaryHeap;
 
     while (2 * idx + 1 < len) {
@@ -66,8 +65,6 @@ static void ShiftDown(TPQueue* pQueue, int idx) {
 }
 
 static void ShiftUp(TPQueue* pQueue, int idx) {
-    int len = pQueue->Len;
-    int maxLen = pQueue->MaxLen;
     short* binaryHeap = pQueue->BinaryHeap;
 
     int parent = (idx - 1) / 2;
@@ -98,7 +95,6 @@ bool Enqueue(TPQueue* pQueue, short value) {
 
 int Dequeue(TPQueue* pQueue) {
     int len = pQueue->Len;
-    int maxLen = pQueue->MaxLen;
     short* binaryHeap = pQueue->BinaryHeap;
     assert(len != 0);
     short minimum = binaryHeap[0];
