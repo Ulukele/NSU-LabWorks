@@ -40,16 +40,10 @@ TEdgeLight* FindSpanningTree(TGraph* graph) {
 
     for (int i = 0; i < verticesCount; ++i) {
         parents[i] = -1;
-        keys[i] = PQUEUE_INF_KEY;
+        keys[i] = -1;
         order[i] = -1;
     }
     keys[0] = 0;
-    for (int i = 0; i < neighboursCount[0]; ++i) {
-        int u = neighbours[0][i];
-        keys[u] = weights[0][i];
-        parents[u] = 0;
-        Enqueue(pQueue, u);
-    }
     Enqueue(pQueue, 0);
 
     while (!IsEmpty(pQueue)) {
@@ -151,12 +145,16 @@ int main() {
         }
         from--;
         to--;
+        
         int fromIdx = neighboursCountCopy[from];
         int toIdx = neighboursCountCopy[to];
+
         neighbours[from][fromIdx] = to;
         neighbours[to][toIdx] = from;
+
         weights[from][fromIdx] = weight;
         weights[to][toIdx] = weight;
+
         neighboursCountCopy[from]++;
         neighboursCountCopy[to]++;
     }

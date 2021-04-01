@@ -18,8 +18,8 @@ static void SwapElements(TPQueue* pQueue, short first, short second) {
     Swap(&binaryHeap[first], &binaryHeap[second]);
 }
 
-bool CompareKeys(short first, short second, const int* keys) {
-    return ((keys[second] == PQUEUE_INF_KEY && keys[first] != keys[second]) || keys[first] < keys[second]);
+static bool CompareKeys(short first, short second, const int* keys) {
+    return (keys[first] < keys[second]);
 }
 
 TPQueue* CreateEmptyPQueue(int maxLen, int* keys, short* order) {

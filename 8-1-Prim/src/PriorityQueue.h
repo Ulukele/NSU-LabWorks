@@ -1,6 +1,5 @@
 #pragma once
 #include <stdbool.h>
-#define PQUEUE_INF_KEY -2147483646
 
 // Priority queue based on Binary heap
 
@@ -11,8 +10,6 @@ typedef struct {
     int MaxLen;
     int Len;
 } TPQueue;
-
-bool CompareKeys(short first, short second, const int* keys);
 
 TPQueue* CreateEmptyPQueue(int maxLen, int* keys, short* order);
 
