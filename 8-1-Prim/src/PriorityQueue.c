@@ -96,7 +96,7 @@ bool Enqueue(TPQueue* pQueue, short value) {
 int Dequeue(TPQueue* pQueue) {
     int len = pQueue->Len;
     short* binaryHeap = pQueue->BinaryHeap;
-    assert(len != 0);
+    assert(len > 0);
     short minimum = binaryHeap[0];
     SwapElements(pQueue, 0, len - 1);
     (pQueue->Len)--;

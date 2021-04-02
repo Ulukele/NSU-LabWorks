@@ -1,58 +1,44 @@
 #include "Graph.h"
 #include <malloc.h>
 
-void PrintGraph(TGraph* graph) {
-    short** neighbours = graph->Neighbours;
-    int** weights = graph->Weights;
-    short* neighboursCount = graph->NeighboursCount;
-    int verticesCount = graph->VerticesCount;
-    printf("Graph:\n");
-    printf("Vertices Count: %d\n", verticesCount);
-    for (int i = 0; i < verticesCount; ++i) {
-        printf("%d: ", i);
-        for (int j = 0; j < neighboursCount[i]; ++j) {
-            printf("(%hd %d) ", neighbours[i][j], weights[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 void DeleteGraph(TGraph* graph) {
-    if (graph == NULL) {
-        return;
-    }
-    int verticesCount = graph->VerticesCount;
-    free(graph->NeighboursCount);
-    if (graph->Neighbours != NULL) {
-        for (int i = 0; i < verticesCount; ++i) {
-            free(graph->Neighbours[i]);
-        }
-        free(graph->Neighbours);
-    }
-    if (graph->Weights != NULL) {
-        for (int i = 0; i < verticesCount; ++i) {
-            free(graph->Weights[i]);
-        }
-        free(graph->Weights);
-    }
-    free(graph);
-    
+    CleanUp(graph->Cleaner);
 }
 
 TGraph* CreateEmptyGraph(int verticesCount) {
-    TGraph* graph = malloc(sizeof(*graph));
-    if (graph == NULL) {
+    TMemNode* cleaner = InitCleaner();
+    TGraph* graph = MallocAuto(cleaner, sizeof(*graph));
+    if (graph == NULL || cleaner == NULL) {
+        free(graph);
+        free(cleaner);
         return NULL;
     }
-    short** neighbours = malloc(sizeof(short*) * verticesCount);
-    int** weights = malloc(sizeof(int*) * verticesCount);
-    short* neighboursCount = calloc(verticesCount, sizeof(*neighboursCount));
+    short** neighbours = MallocAuto(cleaner, sizeof(short*) * verticesCount);
+    int** weights = MallocAuto(cleaner, sizeof(int*) * verticesCount);
+    short* neighboursCount = MallocAuto(cleaner, sizeof(*neighboursCount) * verticesCount);
+    for (int i = 0; i < verticesCount; ++i) {
+        neighboursCount[i] = 0;
+    }
     graph->Neighbours = neighbours;
     graph->Weights = weights;
     graph->NeighboursCount = neighboursCount;
     graph->VerticesCount = verticesCount;
+    graph->Cleaner = cleaner;
     if (neighbours == NULL || weights == NULL || neighboursCount == NULL) {
         DeleteGraph(graph);
     }
     return graph;
+}
+
+void AllocateNeighbours(TGraph* graph) {
+    TMemNode* cleaner = graph->Cleaner;
+    short* neighboursCount = graph->NeighboursCount;
+    short** neighbours = graph->Neighbours; 
+    int** weights = graph->Weights;
+    int verticesCount = graph->VerticesCount;
+
+    for (int i = 0; i < verticesCount; ++i) {
+        neighbours[i] = MallocAuto(cleaner, sizeof(short) * neighboursCount[i]);
+        weights[i] = MallocAuto(cleaner, sizeof(int) * neighboursCount[i]);
+    }
 }
