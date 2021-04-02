@@ -132,6 +132,7 @@ int main() {
     SkipNum(in, 2);
     short* neighboursCountCopy = calloc(n, sizeof(*neighboursCountCopy));
     if (neighboursCountCopy == NULL) {
+        fclose(in);
         DeleteGraph(graph);
         return 0;
     }
@@ -139,7 +140,8 @@ int main() {
         short from, to;
         int weight;
         if (fscanf(in, "%hd %hd %d", &from, &to, &weight) != 3) {
-            printf("bad number of lines\n"); 
+            printf("bad number of lines\n");
+            fclose(in);
             free(neighboursCountCopy);
             DeleteGraph(graph);
             return 0;
