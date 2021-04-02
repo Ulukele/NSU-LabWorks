@@ -166,6 +166,7 @@ int main() {
         neighboursCountCopy[to]++;
     }
     free(neighboursCountCopy);
+    fclose(in);
 
     TEdgeLight* spanningTree = FindSpanningTree(graph);
     if (spanningTree == NULL) {

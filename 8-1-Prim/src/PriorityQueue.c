@@ -98,7 +98,7 @@ int Dequeue(TPQueue* pQueue) {
     short* binaryHeap = pQueue->BinaryHeap;
     assert(len != 0);
     short minimum = binaryHeap[0];
-    binaryHeap[0] = binaryHeap[len - 1];
+    SwapElements(pQueue, 0, len - 1);
     (pQueue->Len)--;
     ShiftDown(pQueue, 0);
 
