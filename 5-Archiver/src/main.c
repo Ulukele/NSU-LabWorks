@@ -9,12 +9,6 @@
 
 #define ALPHABET_LEN 256
 
-void SkipChars(FILE* file, unsigned int count) {
-    for (unsigned int i = 0; i < count; ++i) {
-        getc(file);
-    }
-}
-
 bool ParseParameters(int argc, char** argv, char* mode, FILE** inputFile, FILE** outputFile) {
     bool parsed = false;
     if (argc == 1) {
@@ -26,7 +20,7 @@ bool ParseParameters(int argc, char** argv, char* mode, FILE** inputFile, FILE**
             printf("No mode specified in %s.\n", INPUT);
             exit(0);
         }
-        SkipChars(*inputFile, 2);
+        fseek(*inputFile, 2, SEEK_CUR);
     }
     else if (argc == 2) {
         printf("Specified only mode.\n");
@@ -75,11 +69,7 @@ int main(int argc, char** argv) {
         unsigned int codeLens[ALPHABET_LEN] = {0};
         SetCodes(root, codes, codeLens, 0, 0);
 
-        fclose(in);
-        in = fopen(INPUT, "rb");
-        if (!parsed) {
-            SkipChars(in, 3);
-        }
+        fseek(in, 3, 0);
 
         TFStream fWriter = {out, 0, 0};
         PrintCompressedTree(root, &fWriter);

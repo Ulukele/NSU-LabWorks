@@ -102,7 +102,7 @@ void PrintEncodedLen(TFStream* fWriter, const int* count, const unsigned* codeLe
 
 void EncodeFile(FILE* in, TFStream* fWriter, const unsigned long* codes, const unsigned* codeLens) {
     int symbol = 0;
-    while (symbol != EOF) {
+    while (!feof(in)) {
         symbol = getc(in);
         if (symbol == EOF) {
             break;

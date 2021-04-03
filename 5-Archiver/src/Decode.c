@@ -40,7 +40,7 @@ void DecodeFile(TFStream* fReader, FILE* out, const TBTree* codesTree, unsigned 
         else {
             node = node->Left;
         }
-        if (node->Symbol != EOF) {
+        if (node->Symbol != -1) {
             putc(node->Symbol, out);
             node = codesTree;
         }
