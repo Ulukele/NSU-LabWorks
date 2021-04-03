@@ -1,10 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-typedef struct TMemNode {
-    void* Ptr;
-    struct TMemNode* Next;
-} TMemNode;
+typedef struct TMemNode TMemNode;
 
 void* MallocAuto(TMemNode* trash, size_t size);
 

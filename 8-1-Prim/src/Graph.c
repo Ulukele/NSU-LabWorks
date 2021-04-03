@@ -1,12 +1,7 @@
 #include "Graph.h"
 #include <malloc.h>
 
-void DeleteGraph(TGraph* graph) {
-    CleanUp(graph->Cleaner);
-}
-
-TGraph* CreateEmptyGraph(int verticesCount) {
-    TMemNode* cleaner = InitCleaner();
+TGraph* CreateEmptyGraph(int verticesCount, TMemNode* cleaner) {
     TGraph* graph = MallocAuto(cleaner, sizeof(*graph));
     if (graph == NULL || cleaner == NULL) {
         free(graph);
@@ -23,15 +18,13 @@ TGraph* CreateEmptyGraph(int verticesCount) {
     graph->Weights = weights;
     graph->NeighboursCount = neighboursCount;
     graph->VerticesCount = verticesCount;
-    graph->Cleaner = cleaner;
     if (neighbours == NULL || weights == NULL || neighboursCount == NULL) {
-        DeleteGraph(graph);
+        CleanUp(cleaner);
     }
     return graph;
 }
 
-void AllocateNeighbours(TGraph* graph) {
-    TMemNode* cleaner = graph->Cleaner;
+void AllocateNeighbours(TGraph* graph, TMemNode* cleaner) {
     short* neighboursCount = graph->NeighboursCount;
     short** neighbours = graph->Neighbours; 
     int** weights = graph->Weights;

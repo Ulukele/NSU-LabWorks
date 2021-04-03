@@ -3,6 +3,14 @@
 #include <assert.h>
 #include <stdbool.h>
 
+struct TPQueue {
+    short* BinaryHeap;
+    int* Keys;
+    short* Order;
+    int MaxLen;
+    int Len;
+};
+
 static void Swap(short* first, short* second) {
     short holder = *first;
     *first = *second;

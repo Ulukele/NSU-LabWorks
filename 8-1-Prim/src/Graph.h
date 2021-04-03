@@ -1,12 +1,11 @@
 #pragma once
-#include "MemClean.h"
+#include "MemManager.h"
 
-typedef struct {
+typedef struct TGraph {
     short** Neighbours;
     int** Weights;
     short* NeighboursCount;
     int VerticesCount;
-    TMemNode* Cleaner;
 } TGraph;
 
 typedef struct {
@@ -14,10 +13,6 @@ typedef struct {
     short int End;
 } TEdgeLight;
 
-void PrintGraph(TGraph* graph);
+TGraph* CreateEmptyGraph(int verticesCount, TMemNode* cleaner);
 
-void DeleteGraph(TGraph* graph);
-
-TGraph* CreateEmptyGraph(int verticesCount);
-
-void AllocateNeighbours(TGraph* graph);
+void AllocateNeighbours(TGraph* graph, TMemNode* cleaner);

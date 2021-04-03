@@ -3,13 +3,7 @@
 
 // Priority queue based on Binary heap
 
-typedef struct {
-    short* BinaryHeap;
-    int* Keys;
-    short* Order;
-    int MaxLen;
-    int Len;
-} TPQueue;
+typedef struct TPQueue TPQueue;
 
 TPQueue* CreateEmptyPQueue(int maxLen, int* keys, short* order);
 

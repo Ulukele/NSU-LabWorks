@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "Graph.h"
 #include "PriorityQueue.h"
-#include "MemClean.h"
+#include "MemManager.h"
 
 void SkipNum(FILE* file, int count) {
     int skip;
@@ -99,7 +99,8 @@ int main() {
         return 0;
     }
 
-    TGraph* graph = CreateEmptyGraph(n);
+    TMemNode* graphCleaner = InitCleaner();
+    TGraph* graph = CreateEmptyGraph(n, graphCleaner);
     assert(graph);
     short** neighbours = graph->Neighbours;
     int** weights = graph->Weights;
@@ -110,30 +111,30 @@ int main() {
         int weight;
         if (scanf("%hd %hd %d", &from, &to, &weight) != 3) {
             printf("bad number of lines\n");
-            DeleteGraph(graph);
+            CleanUp(graphCleaner);
             return 0;
         }
         if (to > n || from > n || to <= 0 || from <= 0) {
             printf("bad vertex\n");
-            DeleteGraph(graph);
+            CleanUp(graphCleaner);
             return 0;
         }
         if (weight < 0) {
             printf("bad length\n");
-            DeleteGraph(graph);
+            CleanUp(graphCleaner);
             return 0;
         }
         neighboursCount[from - 1]++;
         neighboursCount[to - 1]++;
     }
-    AllocateNeighbours(graph);
+    AllocateNeighbours(graph, graphCleaner);
 
     FILE* in = fopen("in.txt", "r");
     SkipNum(in, 2);
     short* neighboursCountCopy = calloc(n, sizeof(*neighboursCountCopy));
     if (neighboursCountCopy == NULL) {
         fclose(in);
-        DeleteGraph(graph);
+        CleanUp(graphCleaner);
         return 0;
     }
     for (int i = 0; i < m; ++i) {
@@ -143,7 +144,7 @@ int main() {
             printf("bad number of lines\n");
             fclose(in);
             free(neighboursCountCopy);
-            DeleteGraph(graph);
+            CleanUp(graphCleaner);
             return 0;
         }
         from--;
@@ -172,7 +173,7 @@ int main() {
         }
     }
     free(spanningTree);
-    DeleteGraph(graph);
+    CleanUp(graphCleaner);
     
     return 0;
 }

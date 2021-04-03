@@ -1,5 +1,10 @@
-#include "MemClean.h"
+#include "MemManager.h"
 #include <malloc.h>
+
+struct TMemNode {
+    void* Ptr;
+    struct TMemNode* Next;
+};
 
 static TMemNode* CreateMemNode(void* ptr, TMemNode* next) {
     TMemNode* memNode = malloc(sizeof(*memNode));
