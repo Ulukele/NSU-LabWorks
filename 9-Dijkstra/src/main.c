@@ -17,10 +17,8 @@ void SkipNum(FILE* file, int count) {
 
 void FindPaths(TGraph* graph, short s, int* shortestLens, short* parents) {
     TMemNode* cleaner = InitCleaner();
+    int* weightsMatrix = graph->WeightsMatrix;
     int verticesCount = graph->VerticesCount;
-    short** neighbours = graph->Neighbours;
-    int** weights = graph->Weights;
-    short* neighboursCount = graph->NeighboursCount;
 
     if (verticesCount == 0) {
         CleanUp(cleaner);
@@ -53,20 +51,22 @@ void FindPaths(TGraph* graph, short s, int* shortestLens, short* parents) {
     while (!IsEmpty(pQueue)) {
         int v = Dequeue(pQueue);
         visited[v] = true;
-        for (int i = 0; i < neighboursCount[v]; ++i) {
-            int u = neighbours[v][i];
-            if (order[u] == -1) {
-                keys[u] = weights[v][i];
-                parents[u] = v;
-                shortestLens[u] = shortestLens[v] + weights[v][i];
-                Enqueue(pQueue, u);
-            } else if (weights[v][i] < keys[u] && !visited[u]) {
-                parents[u] = v;
-                shortestLens[u] = shortestLens[v] + weights[v][i];
-                DecreaseKey(pQueue, u, weights[v][i]);
+        for (int i = 0; i < verticesCount; ++i) {
+            if (weightsMatrix[v * verticesCount + i] == -1) {
+                continue;
             }
-            if (shortestLens[u] < 0 || shortestLens[parents[u]] == -1) {
-                shortestLens[u] = -1;
+            if (order[i] == -1) {
+                keys[i] = weightsMatrix[v * verticesCount + i];
+                parents[i] = v;
+                shortestLens[i] = shortestLens[v] + weightsMatrix[v * verticesCount + i];
+                Enqueue(pQueue, i);
+            } else if (weightsMatrix[v * verticesCount + i] < keys[i] && !visited[i]) {
+                parents[i] = v;
+                shortestLens[i] = shortestLens[v] + weightsMatrix[v * verticesCount +i];
+                DecreaseKey(pQueue, i, weightsMatrix[v * verticesCount + i]);
+            }
+            if (shortestLens[i] < 0 || shortestLens[parents[i]] == -1) {
+                shortestLens[i] = -1;
             }
         }
     }
@@ -110,9 +110,12 @@ int main() {
     TMemNode* graphCleaner = InitCleaner();
     TGraph* graph = CreateEmptyGraph(n, graphCleaner);
     assert(graph);
-    short** neighbours = graph->Neighbours;
-    int** weights = graph->Weights;
-    short* neighboursCount = graph->NeighboursCount;
+    int* weightsMatrix = graph->WeightsMatrix;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            weightsMatrix[i * n + j] = -1;
+        }
+    } 
 
     for (int i = 0; i < m; ++i) {
         short from, to;
@@ -132,45 +135,11 @@ int main() {
             CleanUp(graphCleaner);
             return 0;
         }
-        neighboursCount[from - 1]++;
-        neighboursCount[to - 1]++;
-    }
-    AllocateNeighbours(graph, graphCleaner);
-
-    FILE* in = fopen("in.txt", "r");
-    SkipNum(in, 4);
-    short* neighboursCountCopy = calloc(n, sizeof(*neighboursCountCopy));
-    if (neighboursCountCopy == NULL) {
-        fclose(in);
-        CleanUp(graphCleaner);
-        return 0;
-    }
-    for (int i = 0; i < m; ++i) {
-        short from, to;
-        int weight;
-        if (fscanf(in, "%hd %hd %d", &from, &to, &weight) != 3) {
-            printf("bad number of lines\n");
-            fclose(in);
-            free(neighboursCountCopy);
-            CleanUp(graphCleaner);
-            return 0;
-        }
         from--;
         to--;
-        
-        int fromIdx = neighboursCountCopy[from];
-        neighbours[from][fromIdx] = to;
-        weights[from][fromIdx] = weight;
-        neighboursCountCopy[from]++;
-
-        int toIdx = neighboursCountCopy[to];
-        neighbours[to][toIdx] = from;
-        weights[to][toIdx] = weight;
-        neighboursCountCopy[to]++;
+        weightsMatrix[from * n + to] = weight;
+        weightsMatrix[to * n + from] = weight;
     }
-    free(neighboursCountCopy);
-    fclose(in);
-    
 
     TMemNode* cleaner = InitCleaner();
     int* shortestLens = MallocAuto(cleaner, n * sizeof(*shortestLens));
@@ -191,9 +160,11 @@ int main() {
     printf("\n");
 
     int ways = (f == s);
-    for (int i = 0; i < neighboursCount[f]; ++i) {
-        int u = neighbours[f][i];
-        if (parents[u] != -1) {
+    for (int i = 0; i < n; ++i) {
+        if (weightsMatrix[f * n + i] == -1) {
+            continue;
+        }
+        if (parents[i] != -1) {
             ways++;
         }
     }
