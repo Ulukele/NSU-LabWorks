@@ -69,7 +69,12 @@ int main(int argc, char** argv) {
         unsigned int codeLens[ALPHABET_LEN] = {0};
         SetCodes(root, codes, codeLens, 0, 0);
 
-        fseek(in, 3, 0);
+        if (parsed) {
+            fseek(in, 0, 0);
+        }
+        else {
+            fseek(in, 3, 0);
+        }
 
         TFStream fWriter = {out, 0, 0};
         PrintCompressedTree(root, &fWriter);
