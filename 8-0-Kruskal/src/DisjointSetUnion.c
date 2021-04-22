@@ -6,8 +6,8 @@ TDSU* MakeSets(int count) {
     if (dsu == NULL) {
         return NULL;
     }
-    dsu->Parent = calloc(count, sizeof(int));
-    dsu->Rank = calloc(count, sizeof(int));
+    dsu->Parent = calloc(count, sizeof(short int));
+    dsu->Rank = calloc(count, sizeof(short int));
    if (dsu->Parent == NULL || dsu->Rank == NULL) {
         DeleteSets(dsu);
         return NULL;
